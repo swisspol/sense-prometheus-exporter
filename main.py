@@ -57,33 +57,13 @@ def run():
     payload = response.json()
     assert payload["authorized"] == True
     access_token = payload["access_token"]
-    # print "TOKEN = '%s'" % access_token
     assert access_token
     monitor = payload["monitors"][0]
-    # print "MONITOR = \n%s" % monitor
-    # headers = {
-    #     "Authorization": "bearer %s" % access_token
-    # }
-
-    # Get devices
-    # params = {
-    #     "include_merged": "true"
-    # }
-    # response = requests.get("%s/app/monitors/44153/devices" % API_ENDPOINT, headers=headers, params=params)
-    # assert response.status_code == 200
-    # payload = response.json()
-    # print "DEVICES = %d" % len(payload)
 
     # Stream
     ws = websocket.WebSocketApp("wss://clientrt.sense.com/monitors/%d/realtimefeed?access_token=%s" % (monitor["id"], access_token), on_message=on_message, on_error=on_error, on_close=on_close)
     ws.on_open = on_open
     ws.run_forever()
-
-    # Log-out
-    # response = requests.get("%s/logout" % API_ENDPOINT, headers=headers)
-    # assert response.status_code == 200
-    # payload = response.json()
-    # assert payload["status"] == "ok"
 
 
 def sighandler(signum, frame):
