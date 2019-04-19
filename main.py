@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import sys
 import json
 import signal
 import requests
@@ -25,13 +26,16 @@ def on_open(ws):
 def on_message(ws, message):
     try:
         payload = json.loads(message)
-        assert payload["type"] == "realtime_update"
-        payload = payload["payload"]
-        grid_watts.set(payload["w"])
-        solar_watts.set(payload["solar_w"])
-        measure_count.inc()
-    except Exception as e:
-        print e
+        payload_type = payload["type"]
+        if payload_type == "realtime_update":
+            payload = payload["payload"]
+            grid_watts.set(payload["w"])
+            solar_watts.set(payload.get("solar_w", 0.0))
+            measure_count.inc()
+        else:
+            print "Ignored WS message '%s'" % payload_type
+    except:
+        print sys.exc_info()
 
 
 def on_error(ws, error):
