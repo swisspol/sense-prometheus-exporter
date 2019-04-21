@@ -20,7 +20,7 @@ measure_count = Counter("sense_measure_count", "Measure count")
 
 
 def on_open(ws):
-    print("### open ###")
+    print "### WS opened ###"
 
 
 def on_message(ws, message):
@@ -39,11 +39,11 @@ def on_message(ws, message):
 
 
 def on_error(ws, error):
-    print(error)
+    print "### WS error ###\n%s" % error
 
 
 def on_close(ws):
-    print("### closed ###")
+    print "### WS closed ###"
 
 
 def run():
@@ -72,6 +72,7 @@ def sighandler(signum, frame):
 
 
 if __name__ == "__main__":
+    print "=== START ==="
     signal.signal(signal.SIGTERM, sighandler)
     try:
         start_http_server(METRICS_PORT)
